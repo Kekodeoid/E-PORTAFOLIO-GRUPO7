@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E-Portafolio | Software de Automatización de Citas Médicas | Grupo 7 – UCENM 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0a1628;
+    --navy-mid: #0f2040;
+    --navy-light: #162d52;
+    --teal: #00c2a8;
+    --teal-dark: #009e88;
+    --teal-glow: rgba(0,194,168,0.18);
+    --gold: #f0c040;
+    --white: #f4f8ff;
+    --muted: #8aa0be;
+    --card-bg: rgba(15,32,64,0.85);
+    --border: rgba(0,194,168,0.2);
+    --red: #ff5a5a;
+    --orange: #ff8c38;
+    --green: #3ecf8e;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Sora', sans-serif;
+    background: radial-gradient(circle at top, rgba(0,194,168,0.08), transparent 30%), var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+    line-height: 1.6;
+  }
+
+  
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--navy); }
+  ::-webkit-scrollbar-thumb { background: var(--teal); border-radius: 3px; }
+
+  
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    background: rgba(10,22,40,0.95);
+    backdrop-filter: blur(16px);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 60px;
+  }
+  .nav-logo {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.1rem; color: var(--teal);
+    display: flex; align-items: center; gap: 0.5rem;
+  }
+  .nav-logo span { color: var(--white); font-size: 0.75rem; font-family: 'Sora', sans-serif; opacity: 0.7; }
+  .nav-links { display: flex; gap: 0.25rem; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none;
+    font-size: 0.72rem; font-weight: 500; letter-spacing: 0.05em;
+    padding: 0.35rem 0.75rem; border-radius: 4px;
+    transition: all 0.2s; text-transform: uppercase;
+  }
+  .nav-links a:hover { color: var(--teal); background: var(--teal-glow); }
+
+  
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    position: relative; overflow: hidden;
+    padding: 80px 2rem 4rem;
+  }
+  .hero-grid {
+    position: absolute; inset: 0; opacity: 0.04;
+    background-image: 
+      linear-gradient(var(--teal) 1px, transparent 1px),
+      linear-gradient(90deg, var(--teal) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .hero-glow {
+    position: absolute; top: 20%; left: 50%; transform: translateX(-50%);
+    width: 700px; height: 500px;
+    background: radial-gradient(ellipse, rgba(0,194,168,0.12) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-content {
+    position: relative; z-index: 1; max-width: 900px; text-align: center;
+    animation: fadeUp 0.9s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    background: var(--teal-glow); border: 1px solid var(--border);
+    color: var(--teal); font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 0.4rem 1.2rem; border-radius: 50px; margin-bottom: 1.5rem;
+  }
+  .hero-badge::before {
+    content: ''; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--teal); animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.4)} }
+  .hero h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(2.4rem, 5vw, 4rem);
+    line-height: 1.1; margin-bottom: 1rem; color: var(--white);
+  }
+  .hero h1 em { font-style: italic; color: var(--teal); }
+  .hero-sub {
+    color: var(--muted); font-size: 1rem; max-width: 760px; margin: 0 auto 2rem;
+  }
+
+  .hero-stats {
+    display: flex; justify-content: center; gap: 3rem; margin-bottom: 2.5rem;
+    flex-wrap: wrap;
+  }
+  .hero-stat { text-align: center; }
+  .hero-stat .val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 2rem; color: var(--teal); display: block;
+  }
+  .hero-stat .lbl { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+
+  .team-grid {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; margin-top: 1rem;
+  }
+  .team-chip {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 8px; padding: 0.6rem 1rem;
+    font-size: 0.75rem;
+  }
+  .team-chip .name { color: var(--white); font-weight: 600; }
+  .team-chip .id { color: var(--teal); font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; }
+
+  
+  section { padding: 5rem 2rem; max-width: 1100px; margin: 0 auto; scroll-margin-top: 86px; }
+  .section-label {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    color: var(--teal); font-size: 0.7rem; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+  .section-label::before {
+    content: ''; display: block; width: 20px; height: 2px; background: var(--teal);
+  }
+  h2.sec-title {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.8rem, 3vw, 2.6rem);
+    color: var(--white); margin-bottom: 0.5rem; line-height: 1.15;
+  }
+  .sec-desc { color: var(--muted); font-size: 0.92rem; max-width: 640px; margin-bottom: 2.5rem; }
+
+  
+  .divider {
+    border: none; border-top: 1px solid var(--border);
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  
+  .card {
+    box-shadow: 0 12px 30px rgba(0,0,0,0.18);
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.75rem; backdrop-filter: blur(8px);
+    transition: border-color 0.25s, transform 0.2s;
+  }
+  .card:hover { border-color: var(--teal); transform: translateY(-2px); }
+  .card-title {
+    font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.1em;
+    color: var(--teal); font-weight: 700; margin-bottom: 0.5rem;
+  }
+  .card-body { color: var(--muted); font-size: 0.88rem; line-height: 1.7; }
+
+  
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.25rem; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.25rem; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; }
+
+  
+  .table-wrap { overflow-x: auto; border-radius: 10px; border: 1px solid var(--border); }
+  table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+  thead tr { background: rgba(0,194,168,0.12); }
+  thead th {
+    padding: 0.85rem 1rem; text-align: left;
+    color: var(--teal); font-weight: 600;
+    font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em;
+    border-bottom: 1px solid var(--border);
+  }
+  tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); transition: background 0.15s; }
+  tbody tr:hover { background: rgba(0,194,168,0.06); }
+  tbody td { padding: 0.8rem 1rem; color: var(--muted); vertical-align: top; }
+  tbody td:first-child { color: var(--teal); font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 500; }
+  tbody td strong { color: var(--white); font-weight: 600; }
+
+  
+  .badge {
+    display: inline-flex; align-items: center;
+    padding: 0.2rem 0.65rem; border-radius: 50px;
+    font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .badge-alto { background: rgba(255,90,90,0.15); color: var(--red); border: 1px solid rgba(255,90,90,0.3); }
+  .badge-critico { background: rgba(255,60,60,0.2); color: #ff3c3c; border: 1px solid rgba(255,60,60,0.4); }
+  .badge-medio { background: rgba(255,140,56,0.15); color: var(--orange); border: 1px solid rgba(255,140,56,0.3); }
+  .badge-bajo { background: rgba(62,207,142,0.12); color: var(--green); border: 1px solid rgba(62,207,142,0.25); }
+  .badge-alta { background: rgba(255,90,90,0.12); color: #ff8080; border: 1px solid rgba(255,90,90,0.25); }
+  .badge-media { background: rgba(240,192,64,0.12); color: var(--gold); border: 1px solid rgba(240,192,64,0.25); }
+
+  
+  .kpi-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 12px; padding: 1.5rem;
+    position: relative; overflow: hidden;
+  }
+  .kpi-card::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0;
+    height: 3px; background: linear-gradient(90deg, var(--teal), var(--teal-dark));
+  }
+  .kpi-card .kpi-id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.68rem; color: var(--teal); margin-bottom: 0.4rem;
+  }
+  .kpi-card .kpi-name {
+    font-weight: 700; font-size: 0.88rem; color: var(--white);
+    margin-bottom: 0.5rem; line-height: 1.3;
+  }
+  .kpi-card .kpi-meta { font-size: 0.78rem; color: var(--muted); margin-top: 0.3rem; }
+  .kpi-card .kpi-meta span { color: var(--gold); font-weight: 600; }
+  .kpi-card .kpi-cat {
+    position: absolute; top: 1.25rem; right: 1.25rem;
+    font-size: 0.65rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+  .kpi-card:hover { border-color: var(--teal); }
+
+  
+  .budget-item { margin-bottom: 1.25rem; }
+  .budget-item .bi-label { display: flex; justify-content: space-between; margin-bottom: 0.4rem; }
+  .budget-item .bi-name { font-size: 0.82rem; color: var(--white); font-weight: 600; }
+  .budget-item .bi-val { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; color: var(--teal); }
+  .budget-item .bi-pct { font-size: 0.7rem; color: var(--muted); }
+  .bar-track { background: rgba(255,255,255,0.06); border-radius: 50px; height: 8px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 50px; transition: width 1s ease; }
+  .bar-teal { background: linear-gradient(90deg, var(--teal), var(--teal-dark)); }
+  .bar-gold { background: linear-gradient(90deg, var(--gold), #d4a016); }
+  .bar-muted { background: linear-gradient(90deg, #4a6280, #3a4f68); }
+
+  
+  .fin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .fin-card {
+    background: var(--card-bg); border: 1px solid var(--border);
+    border-radius: 10px; padding: 1.25rem; text-align: center;
+  }
+  .fin-card .fin-val {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.8rem; color: var(--teal); display: block; line-height: 1.1;
+  }
+  .fin-card .fin-val.gold { color: var(--gold); }
+  .fin-card .fin-val.green { color: var(--green); }
+  .fin-card .fin-lbl { font-size: 0.7rem; color: var(--muted); margin-top: 0.3rem; text-transform: uppercase; letter-spacing: 0.08em; }
+
+  
+  .gantt-wrap { overflow-x: auto; }
+  .gantt-table { width: 100%; border-collapse: collapse; font-size: 0.75rem; min-width: 900px; }
+  .gantt-table thead th {
+    background: rgba(0,194,168,0.1); color: var(--teal);
+    padding: 0.6rem 0.5rem; font-weight: 600; font-size: 0.66rem;
+    text-transform: uppercase; border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  .gantt-table tbody tr { border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .gantt-table tbody tr:hover { background: rgba(0,194,168,0.04); }
+  .gantt-table tbody td { padding: 0.55rem 0.5rem; color: var(--muted); vertical-align: middle; }
+  .gantt-table tbody td:first-child { color: var(--teal); font-family: 'JetBrains Mono', monospace; width: 40px; }
+  .gantt-table tbody td:nth-child(2) { color: var(--white); font-weight: 500; min-width: 180px; }
+  .gantt-phase { background: rgba(0,194,168,0.08) !important; }
+  .gantt-phase td { color: var(--teal) !important; font-weight: 700 !important; }
+  .bar-cell { padding: 0.4rem 0.25rem !important; }
+  .g-bar {
+    height: 14px; border-radius: 3px; min-width: 8px;
+    display: inline-block; vertical-align: middle;
+  }
+  .g-p1 { background: linear-gradient(90deg,#00c2a8,#009e88); }
+  .g-p2 { background: linear-gradient(90deg,#f0c040,#d4a016); }
+  .g-p3 { background: linear-gradient(90deg,#a78bfa,#7c5cbf); }
+  .g-p4 { background: linear-gradient(90deg,#60a5fa,#3b82f6); }
+  .g-p5 { background: linear-gradient(90deg,#3ecf8e,#27a167); }
+  .g-hito { background: var(--teal); width:12px; height:12px; transform:rotate(45deg); display:inline-block; vertical-align:middle; border-radius:2px; }
+
+  
+  .risk-grid-visual {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;
+    max-width: 340px;
+  }
+  .risk-cell {
+    aspect-ratio: 1; border-radius: 4px; display: flex; align-items: center;
+    justify-content: center; font-size: 0.62rem; font-weight: 700;
+    transition: transform 0.15s;
+  }
+  .risk-cell:hover { transform: scale(1.15); }
+
+  
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 8px; top: 0; bottom: 0;
+    width: 2px; background: linear-gradient(180deg, var(--teal), transparent);
+  }
+  .tl-item { position: relative; margin-bottom: 2rem; }
+  .tl-dot {
+    position: absolute; left: -2rem; top: 4px;
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--navy); border: 2px solid var(--teal);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .tl-dot::after {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--teal);
+  }
+  .tl-week { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; color: var(--teal); margin-bottom: 0.3rem; }
+  .tl-title { font-weight: 700; color: var(--white); margin-bottom: 0.3rem; font-size: 0.9rem; }
+  .tl-desc { font-size: 0.8rem; color: var(--muted); }
+
+  
+  .deliverable-list { list-style: none; }
+  .deliverable-list li {
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.75rem 0; border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 0.85rem; color: var(--muted);
+  }
+  .deliverable-list li::before {
+    content: '✓'; color: var(--teal); font-weight: 700;
+    font-size: 0.8rem; margin-top: 1px; flex-shrink: 0;
+  }
+  .deliverable-list li strong { color: var(--white); }
+
+  
+  .quality-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem; }
+  .q-tag {
+    background: rgba(0,194,168,0.08); border: 1px solid var(--border);
+    color: var(--teal); font-size: 0.72rem; padding: 0.3rem 0.75rem;
+    border-radius: 4px; font-weight: 600;
+  }
+
+  
+  .conclusion-card {
+    background: linear-gradient(135deg, rgba(0,194,168,0.08), rgba(10,22,40,0.9));
+    border: 1px solid var(--teal);
+    border-radius: 14px; padding: 2rem;
+    position: relative; overflow: hidden;
+  }
+  .conclusion-card::after {
+    content: '"'; position: absolute; right: 1.5rem; top: -0.5rem;
+    font-family: 'DM Serif Display', serif; font-size: 8rem;
+    color: rgba(0,194,168,0.06); line-height: 1;
+  }
+  .conclusion-card p { color: var(--muted); font-size: 0.92rem; line-height: 1.8; position: relative; z-index: 1; }
+
+  
+  footer {
+    background: rgba(5,12,25,0.95); border-top: 1px solid var(--border);
+    padding: 3rem 2rem; text-align: center;
+  }
+  footer p { color: var(--muted); font-size: 0.78rem; }
+  footer strong { color: var(--teal); }
+
+  
+  .scope-in { color: var(--green); }
+  .scope-out { color: var(--red); }
+
+  
+  @media (max-width: 768px) {
+    .nav-links { display: none; }
+    .hero-stats { gap: 1.5rem; }
+    section { padding: 3.5rem 1.25rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">
+    ◈ E-Portafolio
+    <span>| Proyecto de Citas Médicas</span>
+  </div>
+  <div class="nav-links">
+    <a href="#intro">Inicio</a>
+    <a href="#requisitos">Planificación</a>
+    <a href="#riesgos">Seguimiento</a>
+    <a href="#calidad">Calidad</a>
+    <a href="#conclusiones">Cierres / Evidencias</a>
+  </div>
+</nav>
+
+<div class="hero" id="intro">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">E-Portafolio Digital · Formulación y Desarrollo de Proyectos de Tecnología I</div>
+    <h1>Software de <em>Automatización</em><br>de Citas Médicas</h1>
+    <p class="hero-sub">
+      Solución web para clínicas privadas en Honduras que integra gestión de agenda, recordatorios automáticos por WhatsApp Business API y expediente clínico digital.
+    </p>
+    <div style="max-width:760px;margin:0 auto;display:grid;gap:0.9rem;">
+      <div class="card" style="text-align:left;">
+        <div class="card-title">Presentación del Portafolio</div>
+        <div class="card-body">
+          El contenido se organiza en una secuencia clara: Inicio, Planificación, Seguimiento, Calidad y Cierres / Evidencias. La intención es presentar el proyecto con una estructura profesional, lectura ágil y soporte documental completo.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<hr class="divider">
+
+<section>
+  <div class="section-label">Contexto del Proyecto</div>
+  <h2 class="sec-title">Introducción y Problemática</h2>
+  <p class="sec-desc">
+    La brecha digital en el sector salud privado hondureño representa una oportunidad concreta de impacto operativo y económico.
+  </p>
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">🏥 El Problema</div>
+      <div class="card-body">
+        La mayoría de clínicas privadas de mediano tamaño en Honduras aún dependen de llamadas telefónicas, agendas en papel u hojas de cálculo para manejar sus citas médicas. Esto genera altas tasas de inasistencia (25–35%), errores en registro, sobrecarga de recepción y expedientes que pueden perderse o dañarse.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">💡 La Oportunidad</div>
+      <div class="card-body">
+        WhatsApp tiene una penetración superior al <strong>90%</strong> entre usuarios de smartphone en Honduras, convirtiéndolo en el canal ideal para comunicación automatizada con pacientes. Esto, combinado con una plataforma web de gestión, puede transformar la operación de una clínica privada de forma medible y sostenible.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">🎯 Nuestra Propuesta</div>
+      <div class="card-body">
+        Desarrollo de un <strong>Software de Automatización de Citas Médicas</strong>: solución web que integra gestión de agendas multi-médico, envío de recordatorios automáticos vía WhatsApp Business API, y un módulo de expedientes clínicos digitales, todo en 12 semanas con un equipo de 5 personas.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">📊 Impacto Esperado</div>
+      <div class="card-body">
+        Reducir la tasa de inasistencia del 30% al <strong>≤ 12%</strong>, ahorrar 2–3 horas/día en recepción, incrementar un 15–20% las citas efectivas por semana y recuperar la inversión en menos de <strong>7 meses</strong> de operación.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="requisitos">
+  <div class="section-label">Definición de Requisitos</div>
+  <h2 class="sec-title">Requisitos Funcionales y No Funcionales</h2>
+  <p class="sec-desc">Levantados mediante entrevistas con personal clínico, revisión de sistemas similares y análisis de procesos actuales.</p>
+
+  <h3 style="color:var(--white);font-size:1rem;margin-bottom:1rem;font-weight:600;">1.1 Requisitos Funcionales (RF)</h3>
+  <div class="table-wrap" style="margin-bottom:2.5rem;">
+    <table>
+      <thead><tr><th>ID</th><th>Nombre</th><th>Descripción del Requisito</th></tr></thead>
+      <tbody>
+        <tr><td>RF-01</td><td><strong>Gestión de Agenda</strong></td><td>Crear, modificar, cancelar y consultar citas médicas para uno o varios médicos simultáneamente.</td></tr>
+        <tr><td>RF-02</td><td><strong>Vista de Calendario</strong></td><td>Visualización de agendas en modo diario, semanal y mensual con disponibilidad en tiempo real.</td></tr>
+        <tr><td>RF-03</td><td><strong>Recordatorios WhatsApp</strong></td><td>Envío automatizado de recordatorios a través de WhatsApp Business API con confirmación de lectura.</td></tr>
+        <tr><td>RF-04</td><td><strong>Confirmación y Cancelación</strong></td><td>El paciente podrá confirmar o cancelar su cita respondiendo el mensaje de WhatsApp o mediante un enlace web.</td></tr>
+        <tr><td>RF-05</td><td><strong>Expediente Clínico Digital</strong></td><td>Registro, almacenamiento y consulta del historial médico: diagnósticos, recetas y notas de consulta.</td></tr>
+        <tr><td>RF-06</td><td><strong>Gestión de Pacientes</strong></td><td>Módulo de registro con datos demográficos, contactos de emergencia y seguro médico asociado.</td></tr>
+        <tr><td>RF-07</td><td><strong>Multi-médico / Multiespecialidad</strong></td><td>Soporte para múltiples médicos con agendas independientes diferenciadas por especialidad y sala.</td></tr>
+        <tr><td>RF-08</td><td><strong>Panel Administrativo</strong></td><td>Tablero para recepcionistas con métricas: citas del día, ausentismo, ocupación de salas y tiempo de espera.</td></tr>
+        <tr><td>RF-09</td><td><strong>Generación de Reportes</strong></td><td>Exportación de reportes en PDF/Excel sobre asistencia, ingresos y estadísticas por período.</td></tr>
+        <tr><td>RF-10</td><td><strong>Portal del Paciente (Web)</strong></td><td>Interfaz web para consultar historial de citas, documentos y solicitar nueva consulta.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3 style="color:var(--white);font-size:1rem;margin-bottom:1rem;font-weight:600;">1.2 Requisitos No Funcionales (RNF)</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>ID</th><th>Atributo</th><th>Prioridad</th><th>Criterio de Aceptación</th></tr></thead>
+      <tbody>
+        <tr><td>RNF-01</td><td><strong>Seguridad y Privacidad</strong></td><td><span class="badge badge-alta">Alta</span></td><td>Cifrado AES-256 en reposo y TLS 1.3 en tránsito. Control de acceso basado en roles (RBAC).</td></tr>
+        <tr><td>RNF-02</td><td><strong>Disponibilidad</strong></td><td><span class="badge badge-alta">Alta</span></td><td>SLA de 99.5% de tiempo activo. Arquitectura con redundancia y balanceo de carga.</td></tr>
+        <tr><td>RNF-03</td><td><strong>Rendimiento</strong></td><td><span class="badge badge-media">Media</span></td><td>Tiempo de respuesta &lt; 2 segundos para operaciones de agenda. Soporte de hasta 500 usuarios concurrentes.</td></tr>
+        <tr><td>RNF-04</td><td><strong>Usabilidad</strong></td><td><span class="badge badge-alta">Alta</span></td><td>Interfaz intuitiva sin capacitación extensa. Diseño responsivo para móvil y escritorio.</td></tr>
+        <tr><td>RNF-05</td><td><strong>Escalabilidad</strong></td><td><span class="badge badge-media">Media</span></td><td>Arquitectura preparada para múltiples sucursales y crecimiento de base de datos.</td></tr>
+        <tr><td>RNF-06</td><td><strong>Auditabilidad</strong></td><td><span class="badge badge-alta">Alta</span></td><td>Registro inmutable de todos los accesos y modificaciones con marca de tiempo y usuario.</td></tr>
+        <tr><td>RNF-07</td><td><strong>Integrabilidad</strong></td><td><span class="badge badge-media">Media</span></td><td>API REST documentada para futura integración con facturación, laboratorios o seguros médicos.</td></tr>
+        <tr><td>RNF-08</td><td><strong>Recuperación</strong></td><td><span class="badge badge-alta">Alta</span></td><td>RTO &lt; 4 horas. RPO &lt; 1 hora. Backups diarios automatizados en AWS S3.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="alcance">
+  <div class="section-label">Alcance del Proyecto</div>
+  <h2 class="sec-title">Declaración de Alcance</h2>
+  <p class="sec-desc">Diseñar, desarrollar, probar e implementar un sistema web para la automatización de citas médicas en clínicas privadas en 12 semanas calendario.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title">✅ Lo que SÍ incluye — v1.0</div>
+      <ul class="deliverable-list">
+        <li><strong>Módulo de gestión de citas y calendario multi-médico</strong></li>
+        <li><strong>Integración WhatsApp Business API</strong> — recordatorios y confirmaciones automáticas</li>
+        <li><strong>Expediente clínico digital</strong> — historial, diagnósticos, recetas</li>
+        <li><strong>Panel administrativo</strong> con métricas de asistencia y ocupación</li>
+        <li><strong>Portal web para pacientes</strong> — consulta de citas e historial</li>
+        <li><strong>Sistema de roles y permisos</strong> — Administrador, Médico, Recepcionista, Paciente</li>
+        <li><strong>Reportes exportables</strong> en PDF y Excel</li>
+        <li><strong>API REST</strong> documentada para futuras integraciones</li>
+        <li><strong>Manual de usuario</strong> y documentación técnica</li>
+        <li><strong>Capacitación inicial</strong> al personal clave de la clínica</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🚫 Lo que NO incluye — v1.0</div>
+      <ul class="deliverable-list">
+        <li>Integración con sistemas de laboratorio externos</li>
+        <li>Aplicación móvil nativa (iOS/Android) — el portal web es responsivo</li>
+        <li>Funcionalidades de telemedicina o video consulta</li>
+        <li>Gestión de inventario de medicamentos o insumos</li>
+        <li>Integración con sistemas de seguros médicos nacionales</li>
+        <li>Soporte para múltiples sucursales (una sola sede en v1.0)</li>
+        <li>Migración de expedientes en papel de historial previo al sistema</li>
+      </ul>
+      <div style="margin-top:1.25rem;">
+        <div class="card-title" style="margin-bottom:0.6rem;">⚠️ Supuestos Clave</div>
+        <div class="card-body" style="font-size:0.8rem;">
+          Conectividad ≥ 10 Mbps · Acceso a API WhatsApp Business · 
+          5 integrantes con 20 hrs/semana · Duración máxima 12 semanas · 
+          Presupuesto fijo sin incremento
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📦 Entregables del Proyecto</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.5rem;">
+      <span class="q-tag">Diseño de Arquitectura</span>
+      <span class="q-tag">Prototipos UI/UX Aprobados</span>
+      <span class="q-tag">Base de Datos + Scripts Migración</span>
+      <span class="q-tag">Módulos Desarrollados y Probados</span>
+      <span class="q-tag">Sistema Integrado + UAT</span>
+      <span class="q-tag">Manual de Usuario PDF</span>
+      <span class="q-tag">Documentación Técnica Swagger</span>
+      <span class="q-tag">Sistema en Producción</span>
+      <span class="q-tag">Acta de Cierre Firmada</span>
+      <span class="q-tag">Lecciones Aprendidas</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="negocio">
+  <div class="section-label">Caso de Negocio</div>
+  <h2 class="sec-title">Justificación Financiera y Estratégica</h2>
+  <p class="sec-desc">Análisis que justifica la inversión tanto desde el punto de vista operativo como económico para la clínica cliente.</p>
+
+  <div class="fin-grid" style="margin-bottom:2rem;">
+    <div class="fin-card"><span class="fin-val">L 332,177</span><span class="fin-lbl">VPN a 24 meses</span></div>
+    <div class="fin-card"><span class="fin-val gold">393%</span><span class="fin-lbl">TIR Anual Estimada</span></div>
+    <div class="fin-card"><span class="fin-val green">7 meses</span><span class="fin-lbl">Período de Recuperación</span></div>
+    <div class="fin-card"><span class="fin-val">3.56x</span><span class="fin-lbl">Relación Beneficio/Costo</span></div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title">📈 Beneficios Esperados</div>
+      <div class="table-wrap" style="margin-top:0.5rem;">
+        <table>
+          <thead><tr><th>Beneficio</th><th>Impacto</th></tr></thead>
+          <tbody>
+            <tr><td>Reducción de inasistencias</td><td>Del 25–35% al 8–12% — <span class="badge badge-alto">Alto</span></td></tr>
+            <tr><td>Ahorro tiempo de personal</td><td>2–3 horas/día en recepción — <span class="badge badge-alto">Alto</span></td></tr>
+            <tr><td>Incremento capacidad atención</td><td>+15–20% citas efectivas/semana — <span class="badge badge-alto">Alto</span></td></tr>
+            <tr><td>Reducción errores administrativos</td><td>Elimina citas duplicadas — <span class="badge badge-medio">Medio</span></td></tr>
+            <tr><td>Mejora experiencia del paciente</td><td>Portal + expediente propio — <span class="badge badge-medio">Medio</span></td></tr>
+            <tr><td>Cumplimiento normativo</td><td>Expedientes auditables — <span class="badge badge-alto">Alto</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">💰 Análisis Financiero (HNL)</div>
+      <div class="table-wrap" style="margin-top:0.5rem;">
+        <table>
+          <thead><tr><th>Concepto</th><th>Valor (HNL)</th></tr></thead>
+          <tbody>
+            <tr><td>Inversión inicial</td><td><strong>150,000 — 180,000</strong></td></tr>
+            <tr><td>Costo operativo/mes</td><td>2,500 — 4,000</td></tr>
+            <tr><td>Ingreso adicional/mes (15%)</td><td><strong style="color:var(--green)">18,000 — 25,000</strong></td></tr>
+            <tr><td>Ahorro en personal/mes</td><td>3,000 — 5,000</td></tr>
+            <tr><td>Flujo neto mensual</td><td><strong style="color:var(--teal)">L 22,250</strong></td></tr>
+            <tr><td>Tasa de descuento</td><td>10% anual (conservadora)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="margin-top:1rem;padding:0.75rem;background:rgba(0,194,168,0.08);border-radius:8px;font-size:0.8rem;color:var(--teal);">
+        ✓ VPN positivo · TIR muy superior al 10% · Recuperación dentro del primer año
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📊 Flujo de Caja Descontado — Hitos Clave</div>
+    <div class="table-wrap" style="margin-top:0.75rem;">
+      <table>
+        <thead><tr><th>Período</th><th>Flujo Neto Mensual</th><th>Valor Presente</th><th>VPN Acumulado</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td>Mes 0</td><td>Inversión inicial</td><td>—</td><td><strong style="color:var(--red)">-L 150,000</strong></td><td>Inversión</td></tr>
+          <tr><td>Mes 1</td><td>L 22,250</td><td>L 22,066</td><td><strong style="color:var(--red)">-L 127,934</strong></td><td>Recuperando</td></tr>
+          <tr><td>Mes 3</td><td>L 22,250</td><td>L 21,703</td><td><strong style="color:var(--orange)">-L 84,347</strong></td><td>Recuperando</td></tr>
+          <tr><td>Mes 6</td><td>L 22,250</td><td>L 21,169</td><td><strong style="color:var(--orange)">-L 20,308</strong></td><td>Recuperando</td></tr>
+          <tr><td>Mes 9</td><td>L 22,250</td><td>L 20,649</td><td><strong style="color:var(--green)">L 42,156</strong></td><td>✅ Recuperado</td></tr>
+          <tr><td>Mes 12</td><td>L 22,250</td><td>L 20,141</td><td><strong style="color:var(--green)">L 103,084</strong></td><td>✅ Recuperado</td></tr>
+          <tr><td>Mes 24</td><td>L 22,250</td><td>L 18,232</td><td><strong style="color:var(--teal)">L 332,177</strong></td><td>✅ Recuperado</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="presupuesto">
+  <div class="section-label">Presupuesto Detallado</div>
+  <h2 class="sec-title">Línea Base del Proyecto</h2>
+  <p class="sec-desc">Estimación ascendente (bottom-up) sobre 8 roles especializados del mercado IT hondureño. Período: Marzo – Mayo 2026. TC: HNL 25.50 = USD 1.00.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title">Distribución por Categoría</div>
+      <div style="margin-top:0.75rem;">
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Recursos Humanos</span><span><span class="bi-val">L 151,875</span> <span class="bi-pct">86.2%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-teal" style="width:86.2%"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Costos Operativos</span><span><span class="bi-val">L 14,050</span> <span class="bi-pct">8.0%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-gold" style="width:8%"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Tecnología y Licencias</span><span><span class="bi-val">L 10,251</span> <span class="bi-pct">5.8%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-muted" style="width:5.8%"></div></div>
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:1rem;padding-top:1rem;">
+          <div class="bi-label" style="margin-bottom:0.3rem;"><span class="bi-name" style="color:var(--white)">Subtotal</span><span class="bi-val">L 176,176.25</span></div>
+          <div class="bi-label"><span class="bi-name" style="color:var(--orange)">+ Reserva Contingencia (10%)</span><span class="bi-val" style="color:var(--orange)">L 17,617.63</span></div>
+          <div class="bi-label" style="margin-top:0.5rem;"><span class="bi-name" style="color:var(--teal);font-size:1rem;font-weight:700">TOTAL</span><span style="color:var(--teal);font-family:'DM Serif Display',serif;font-size:1.2rem">L 193,793.88</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Distribución por Fase (RRHH)</div>
+      <div style="margin-top:0.75rem;">
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Fase 1 — Gestión del Proyecto</span><span><span class="bi-val">L 37,500</span> <span class="bi-pct">24.7%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-teal" style="width:24.7%"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Fase 2 — Análisis y Diseño</span><span><span class="bi-val">L 30,188</span> <span class="bi-pct">19.9%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-gold" style="width:19.9%"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Fase 3 — Desarrollo</span><span><span class="bi-val">L 55,813</span> <span class="bi-pct">36.7%</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:36.7%;background:linear-gradient(90deg,#a78bfa,#7c5cbf)"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Fase 4 — Pruebas y QA</span><span><span class="bi-val">L 15,250</span> <span class="bi-pct">10.0%</span></span></div>
+          <div class="bar-track"><div class="bar-fill" style="width:10%;background:linear-gradient(90deg,#60a5fa,#3b82f6)"></div></div>
+        </div>
+        <div class="budget-item">
+          <div class="bi-label"><span class="bi-name">Fase 5 — Implementación y Cierre</span><span><span class="bi-val">L 13,125</span> <span class="bi-pct">8.6%</span></span></div>
+          <div class="bar-track"><div class="bar-fill bar-muted" style="width:8.6%"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--white);font-size:1rem;margin-bottom:1rem;font-weight:600;">Equipo de Trabajo — Recursos Humanos</h3>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>Rol</th><th>Nivel</th><th>Salario/mes (HNL)</th><th>Semanas</th><th>Costo Total (HNL)</th><th>Referencia Mercado HN</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><strong>Director de Proyecto / PM</strong></td><td>Senior</td><td>25,000</td><td>12</td><td><strong style="color:var(--teal)">37,500</strong></td><td>CompuTrabajo HN: 22,000–28,000</td></tr>
+        <tr><td>2</td><td><strong>Analista de Sistemas / Req.</strong></td><td>Semi-Senior</td><td>20,000</td><td>8</td><td><strong style="color:var(--teal)">20,000</strong></td><td>Bumeran HN: 17,000–23,000</td></tr>
+        <tr><td>3</td><td><strong>Arquitecto de Software</strong></td><td>Senior</td><td>27,000</td><td>6</td><td><strong style="color:var(--teal)">20,250</strong></td><td>LinkedIn HN: 24,000–30,000</td></tr>
+        <tr><td>4</td><td><strong>Desarrollador Backend (Node/PHP)</strong></td><td>Semi-Senior</td><td>19,000</td><td>10</td><td><strong style="color:var(--teal)">23,750</strong></td><td>CompuTrabajo HN: 16,000–22,000</td></tr>
+        <tr><td>5</td><td><strong>Desarrollador Frontend (React)</strong></td><td>Junior-Mid</td><td>16,000</td><td>10</td><td><strong style="color:var(--teal)">20,000</strong></td><td>Bumeran HN: 13,000–19,000</td></tr>
+        <tr><td>6</td><td><strong>Diseñador UI/UX</strong></td><td>Junior</td><td>13,500</td><td>5</td><td><strong style="color:var(--teal)">8,437.50</strong></td><td>CompuTrabajo HN: 11,000–16,000</td></tr>
+        <tr><td>7</td><td><strong>QA / Tester</strong></td><td>Junior</td><td>13,000</td><td>6</td><td><strong style="color:var(--teal)">9,750</strong></td><td>Bumeran HN: 11,000–16,000</td></tr>
+        <tr><td>8</td><td><strong>DevOps / Infra Cloud</strong></td><td>Semi-Senior</td><td>19,500</td><td>5</td><td><strong style="color:var(--teal)">12,187.50</strong></td><td>LinkedIn HN: 17,000–23,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="edt">
+  <div class="section-label">Estructura de Desglose de Trabajo</div>
+  <h2 class="sec-title">EDT / WBS — Regla del 100%</h2>
+  <p class="sec-desc">Descomposición jerárquica en 4 niveles. La EDT representa todo el trabajo del proyecto sin omisiones ni duplicaciones.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title" style="color:var(--teal)">FASE 1 — Gestión del Proyecto</div>
+      <ul class="deliverable-list">
+        <li>1.1.1 <strong>Inicio y Constitución</strong> — Acta + Registro de Interesados (5 días)</li>
+        <li>1.1.2 <strong>Planificación Detallada</strong> — Alcance, Cronograma, Riesgos (5 días)</li>
+        <li>1.1.3 <strong>Reuniones de Seguimiento</strong> — Semanales durante 12 semanas</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:var(--gold)">FASE 2 — Análisis y Diseño</div>
+      <ul class="deliverable-list">
+        <li>2.1 <strong>Entrevistas</strong> con personal clínico (3 días)</li>
+        <li>2.2 <strong>Taller de Requisitos</strong> — Workshop (2 días)</li>
+        <li>2.3 <strong>Documento SRS v1.0</strong> aprobado (3 días)</li>
+        <li>2.4 <strong>Diseño de Arquitectura</strong> + BD (4 días)</li>
+        <li>2.5 <strong>Prototipo UI/UX</strong> — Figma clickable (5 días)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#a78bfa">FASE 3 — Desarrollo del Software</div>
+      <ul class="deliverable-list">
+        <li>3.1 <strong>Config. Entorno</strong> Git/CI/CD/Servidores (3 días)</li>
+        <li>3.2 <strong>Módulo Autenticación y RBAC</strong> — JWT/OAuth (5 días)</li>
+        <li>3.3 <strong>Módulo Citas y Calendario</strong> — API REST + React (10 días)</li>
+        <li>3.4 <strong>Módulo Integración WhatsApp</strong> — recordatorios (8 días)</li>
+        <li>3.5 <strong>Módulo Expediente Clínico</strong> — historial médico (7 días)</li>
+        <li>3.6 <strong>Dashboard y Reportes</strong> PDF/Excel (7 días)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title" style="color:#60a5fa">FASE 4 — Pruebas y QA</div>
+      <ul class="deliverable-list">
+        <li>4.1 <strong>Pruebas Unitarias</strong> Backend/Frontend — cobertura ≥ 80% (4 días)</li>
+        <li>4.2 <strong>Pruebas de Integración E2E</strong> — Cypress (4 días)</li>
+        <li>4.3 <strong>Pruebas de Seguridad</strong> — OWASP ZAP (2 días)</li>
+        <li>4.4 <strong>Sesiones UAT</strong> con personal de clínica (4 días)</li>
+        <li>4.5 <strong>Corrección de Defectos</strong> y Regresión (4 días)</li>
+      </ul>
+    </div>
+  </div>
+  <div class="card" style="border-color:var(--green)">
+    <div class="card-title" style="color:var(--green)">FASE 5 — Implementación y Cierre</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.6rem;margin-top:0.5rem;">
+      <span class="q-tag">Config. Producción Cloud + SSL</span>
+      <span class="q-tag">Migración de Datos Iniciales</span>
+      <span class="q-tag">Manual de Usuario PDF (3 roles)</span>
+      <span class="q-tag">Sesión de Capacitación</span>
+      <span class="q-tag">Acta de Aceptación y Cierre</span>
+      <span class="q-tag">Documento de Lecciones Aprendidas</span>
+      <span class="q-tag">Presentación Final E-Portafolio</span>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="gantt">
+  <div class="section-label">Cronograma del Proyecto</div>
+  <h2 class="sec-title">Diagrama de Gantt — 12 Semanas</h2>
+  <p class="sec-desc">Período: 10 de marzo al 31 de mayo 2026 · Dependencias Fin-a-Inicio entre fases y módulos.</p>
+  <div class="gantt-wrap card" style="padding:0;">
+    <table class="gantt-table">
+      <thead>
+        <tr>
+          <th>ID</th><th>Tarea</th><th>Pred.</th><th>Inicio</th><th>Fin</th><th>Días</th>
+          <th title="10/03">S1</th><th title="17/03">S2</th><th title="24/03">S3</th><th title="31/03">S4</th>
+          <th title="07/04">S5</th><th title="14/04">S6</th><th title="21/04">S7</th><th title="28/04">S8</th>
+          <th title="05/05">S9</th><th title="12/05">S10</th><th title="19/05">S11</th><th title="26/05">S12</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="gantt-phase"><td>1</td><td>GESTIÓN DEL PROYECTO</td><td>—</td><td>10/03</td><td>31/05</td><td>60</td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px" title="S1"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:12px"></div></td>
+        </tr>
+        <tr><td>1.1</td><td>Acta de Constitución</td><td>—</td><td>10/03</td><td>15/03</td><td>5</td>
+          <td class="bar-cell"><div class="g-hito" title="Hito"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>1.2</td><td>Plan de Gestión</td><td>1.1</td><td>10/03</td><td>22/03</td><td>12</td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p1" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr class="gantt-phase"><td>2</td><td>ANÁLISIS Y DISEÑO</td><td>—</td><td>17/03</td><td>05/04</td><td>15</td>
+          <td></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:12px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>2.1</td><td>Entrevistas y Taller de Requisitos</td><td>1.2</td><td>17/03</td><td>22/03</td><td>5</td>
+          <td></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>2.2</td><td>Documento SRS Aprobado</td><td>2.1</td><td>24/03</td><td>29/03</td><td>5</td>
+          <td></td><td></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>2.3</td><td>Diseño Arquitectura y BD</td><td>2.2</td><td>24/03</td><td>05/04</td><td>10</td>
+          <td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>2.4</td><td>Wireframes / Prototipo UI/UX</td><td>2.2</td><td>24/03</td><td>05/04</td><td>10</td>
+          <td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p2" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr class="gantt-phase"><td>3</td><td>DESARROLLO DEL SOFTWARE</td><td>—</td><td>31/03</td><td>10/05</td><td>30</td>
+          <td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:12px"></div></td>
+          <td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.1</td><td>Config. Entorno Git/CI/CD</td><td>2.3</td><td>31/03</td><td>05/04</td><td>5</td>
+          <td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.2</td><td>Módulo Autenticación y RBAC</td><td>3.1</td><td>07/04</td><td>12/04</td><td>5</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.3</td><td>Módulo Gestión de Citas y Calendario</td><td>3.2</td><td>07/04</td><td>26/04</td><td>15</td>
+          <td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+          <td></td><td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.4</td><td>Módulo Integración WhatsApp</td><td>3.3</td><td>21/04</td><td>03/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.5</td><td>Módulo Expediente Clínico</td><td>3.2</td><td>14/04</td><td>03/05</td><td>15</td>
+          <td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td></td><td></td><td></td><td></td>
+        </tr>
+        <tr><td>3.6</td><td>Dashboard Administrativo y Reportes</td><td>3.5</td><td>28/04</td><td>10/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p3" style="width:20px"></div></td>
+          <td></td><td></td><td></td>
+        </tr>
+        <tr class="gantt-phase"><td>4</td><td>PRUEBAS Y QA</td><td>—</td><td>05/05</td><td>24/05</td><td>15</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:12px"></div></td>
+          <td></td>
+        </tr>
+        <tr><td>4.1</td><td>Pruebas Unitarias Backend/Frontend</td><td>3</td><td>05/05</td><td>17/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:20px"></div></td>
+          <td></td><td></td>
+        </tr>
+        <tr><td>4.3</td><td>UAT con Personal de Clínica</td><td>4.2</td><td>12/05</td><td>24/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p4" style="width:20px"></div></td>
+          <td></td>
+        </tr>
+        <tr class="gantt-phase"><td>5</td><td>IMPLEMENTACIÓN Y CIERRE</td><td>—</td><td>19/05</td><td>31/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p5" style="width:12px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p5" style="width:12px"></div></td>
+        </tr>
+        <tr><td>5.1</td><td>Despliegue en Producción</td><td>4</td><td>19/05</td><td>31/05</td><td>10</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-bar g-p5" style="width:20px"></div></td>
+          <td class="bar-cell"><div class="g-bar g-p5" style="width:20px"></div></td>
+        </tr>
+        <tr><td>5.4</td><td>Acta de Cierre y Entrega Final</td><td>5.3</td><td>26/05</td><td>31/05</td><td>5</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+          <td class="bar-cell"><div class="g-hito"></div></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <div style="margin-top:1rem;display:flex;flex-wrap:wrap;gap:0.75rem;font-size:0.73rem;color:var(--muted)">
+    <span><span style="display:inline-block;width:12px;height:8px;background:linear-gradient(90deg,#00c2a8,#009e88);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Gestión</span>
+    <span><span style="display:inline-block;width:12px;height:8px;background:linear-gradient(90deg,#f0c040,#d4a016);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Análisis/Diseño</span>
+    <span><span style="display:inline-block;width:12px;height:8px;background:linear-gradient(90deg,#a78bfa,#7c5cbf);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Desarrollo</span>
+    <span><span style="display:inline-block;width:12px;height:8px;background:linear-gradient(90deg,#60a5fa,#3b82f6);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Pruebas/QA</span>
+    <span><span style="display:inline-block;width:12px;height:8px;background:linear-gradient(90deg,#3ecf8e,#27a167);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Implementación</span>
+    <span><span style="display:inline-block;width:10px;height:10px;background:var(--teal);transform:rotate(45deg);border-radius:2px;margin-right:4px;vertical-align:middle"></span>Hito Clave</span>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="riesgos">
+  <div class="section-label">Gestión de Riesgos</div>
+  <h2 class="sec-title">Matriz de Riesgos del Proyecto</h2>
+  <p class="sec-desc">Identificación mediante lluvia de ideas y análisis de antecedentes. Valoración cualitativa con escala Probabilidad × Impacto (P×I).</p>
+
+  <div class="fin-grid" style="margin-bottom:2rem;">
+    <div class="fin-card" style="border-color:rgba(255,60,60,0.4)"><span class="fin-val" style="color:var(--red)">1</span><span class="fin-lbl">Riesgo Crítico (17–25)</span></div>
+    <div class="fin-card" style="border-color:rgba(255,90,90,0.3)"><span class="fin-val" style="color:#ff8080">6</span><span class="fin-lbl">Riesgos Altos (10–16)</span></div>
+    <div class="fin-card" style="border-color:rgba(255,140,56,0.3)"><span class="fin-val" style="color:var(--orange)">5</span><span class="fin-lbl">Riesgos Medios (5–9)</span></div>
+    <div class="fin-card" style="border-color:rgba(62,207,142,0.25)"><span class="fin-val" style="color:var(--green)">1</span><span class="fin-lbl">Riesgo Bajo (1–4)</span></div>
+  </div>
+
+  <div class="table-wrap" style="margin-bottom:2rem;">
+    <table>
+      <thead><tr><th>ID</th><th>Categoría</th><th>Riesgo / Efecto</th><th>P</th><th>I</th><th>P×I</th><th>Nivel</th><th>Respuesta</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>RT-01</td><td>Técnico</td>
+          <td><strong>Inestabilidad API WhatsApp (Meta)</strong> — módulo de recordatorios queda inoperante</td>
+          <td>4</td><td>5</td><td style="color:var(--red);font-weight:700">20</td>
+          <td><span class="badge badge-critico">CRÍTICO</span></td>
+          <td>Módulo con patrón Adapter + Twilio SMS como fallback. Monitoreo mensual changelog Meta.</td>
+        </tr>
+        <tr>
+          <td>RT-02</td><td>Técnico</td>
+          <td><strong>Vulnerabilidades seguridad datos clínicos</strong> — riesgo legal y reputacional</td>
+          <td>3</td><td>5</td><td style="color:#ff8080;font-weight:700">15</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>AES-256 en BD, TLS 1.3, RBAC estricto, auditorías OWASP ZAP en cada sprint. SonarCloud en CI/CD.</td>
+        </tr>
+        <tr>
+          <td>RT-03</td><td>Técnico</td>
+          <td><strong>Rendimiento insuficiente bajo carga</strong> — respuesta &gt; 2 segundos</td>
+          <td>3</td><td>4</td><td style="color:#ff8080;font-weight:700">12</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>Pruebas JMeter con 500 usuarios. Caché Redis + connection pooling en RDS. Escalar EC2 si necesario.</td>
+        </tr>
+        <tr>
+          <td>RP-01</td><td>Proyecto</td>
+          <td><strong>Retiro o baja disponibilidad de integrante clave</strong> — retraso 1–3 semanas</td>
+          <td>4</td><td>4</td><td style="color:#ff8080;font-weight:700">16</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>Documentación continua en Swagger. Pair programming. Redistribución aprobada por PM. Reserva 10%.</td>
+        </tr>
+        <tr>
+          <td>RP-02</td><td>Proyecto</td>
+          <td><strong>Scope Creep — cambios de alcance no controlados</strong></td>
+          <td>4</td><td>3</td><td style="color:#ff8080;font-weight:700">12</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>Proceso formal de control de cambios. Toda solicitud requiere aprobación PM + actualización SRS y Gantt.</td>
+        </tr>
+        <tr>
+          <td>RE-01</td><td>Externo</td>
+          <td><strong>Interrupción eléctrica o de internet en Honduras</strong> — pérdida de sesiones/datos</td>
+          <td>4</td><td>3</td><td style="color:#ff8080;font-weight:700">12</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>UPS en equipos críticos. Backups diarios AWS S3. Conexión 4G de respaldo. Plan de trabajo offline.</td>
+        </tr>
+        <tr>
+          <td>RC-01</td><td>Calidad</td>
+          <td><strong>Baja adopción del sistema por el personal clínico</strong> — ROI no se materializa</td>
+          <td>3</td><td>4</td><td style="color:#ff8080;font-weight:700">12</td>
+          <td><span class="badge badge-alto">ALTO</span></td>
+          <td>Diseño UCD. Sesiones UAT. Manual simplificado por rol. Capacitación presencial incluida en Fase 5.</td>
+        </tr>
+        <tr>
+          <td>RT-04</td><td>Técnico</td>
+          <td><strong>Incompatibilidad con navegadores del personal clínico</strong></td>
+          <td>3</td><td>3</td><td style="color:var(--orange);font-weight:700">9</td>
+          <td><span class="badge badge-medio">MEDIO</span></td>
+          <td>Diseño responsive CSS Grid. Testing cross-browser en Chrome, Firefox, Edge, Safari en UAT.</td>
+        </tr>
+        <tr>
+          <td>RP-03</td><td>Proyecto</td>
+          <td><strong>Retrasos en aprobación de entregables por el cliente</strong></td>
+          <td>3</td><td>3</td><td style="color:var(--orange);font-weight:700">9</td>
+          <td><span class="badge badge-medio">MEDIO</span></td>
+          <td>Ventanas de revisión fijas (máx. 48 hrs). Cláusula de aprobación tácita en el acta de inicio.</td>
+        </tr>
+        <tr>
+          <td>RE-02</td><td>Externo</td>
+          <td><strong>Incremento costos cloud por variación HNL/USD</strong></td>
+          <td>3</td><td>2</td><td style="color:var(--orange);font-weight:700">6</td>
+          <td><span class="badge badge-medio">MEDIO</span></td>
+          <td>Reserva contingencia 10% absorbe variaciones. Monitoreo BCH mensual. Escalar si supera HNL 27/USD.</td>
+        </tr>
+        <tr>
+          <td>RC-02</td><td>Calidad</td>
+          <td><strong>Defectos no detectados en módulo de recordatorios</strong> en producción</td>
+          <td>3</td><td>3</td><td style="color:var(--orange);font-weight:700">9</td>
+          <td><span class="badge badge-medio">MEDIO</span></td>
+          <td>Suite de pruebas con ≥ 15 casos para módulo WhatsApp. Dead letter queue + logs de auditoría.</td>
+        </tr>
+        <tr>
+          <td>RE-03</td><td>Externo</td>
+          <td><strong>Restricciones regulatorias en datos médicos Honduras</strong></td>
+          <td>2</td><td>2</td><td style="color:var(--green);font-weight:700">4</td>
+          <td><span class="badge badge-bajo">BAJO</span></td>
+          <td>Privacy by Design desde el inicio. Consultar regulaciones con cliente. Monitorear publicaciones SESAL HN.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="card-title">🔎 Estado de Riesgos — Semana 4 (5 de abril 2026)</div>
+    <div class="card-body" style="margin-top:0.5rem;">
+      <strong style="color:var(--white)">RT-01 (CRÍTICO):</strong> Plan de contingencia activo. Módulo con patrón Adapter implementado en diseño. Twilio SMS como fallback documentado.<br>
+      <strong style="color:var(--white)">RP-01 (ALTO):</strong> 2 integrantes con compromisos académicos extra en semanas 5–6. Tareas redistribuidas. Sin desviación en cronograma.<br>
+      <strong style="color:var(--white)">RE-01 (ALTO):</strong> Corte eléctrico de 3 horas en semana 3. Protocolo aplicado: trabajo offline, sincronización recuperada.
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="kpis">
+  <div class="section-label">Indicadores Clave de Desempeño</div>
+  <h2 class="sec-title">Dashboard de KPIs</h2>
+  <p class="sec-desc">Indicadores estructurados bajo criterio SMART, organizados en dos dimensiones: Gestión del Proyecto e Impacto en el Negocio del Cliente.</p>
+
+  <h3 style="color:var(--white);font-size:0.9rem;margin-bottom:1rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">KPIs de Gestión del Proyecto</h3>
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="kpi-card">
+      <div class="kpi-id">KPI-GP-01</div>
+      <div class="kpi-name">Índice de Riesgos Cerrados (IRC)</div>
+      <div class="kpi-cat">Gestión</div>
+      <div class="kpi-meta">Meta: <span>≥ 80% de riesgos Alto/Crítico cerrados al fin de Fase 3</span></div>
+      <div class="kpi-meta">Fórmula: IRC = (Riesgos cerrados / Total identificados) × 100%</div>
+      <div class="kpi-meta">Frecuencia: <span>Semanal</span> · Responsable: <span>Director PM</span></div>
+      <div class="kpi-meta">⚠️ Alerta si &lt; 60% al finalizar Semana 9</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-id">KPI-GP-02</div>
+      <div class="kpi-name">Variación del Cronograma (SV / SPI)</div>
+      <div class="kpi-cat">Gestión</div>
+      <div class="kpi-meta">Meta: <span>SPI ≥ 0.90</span> en todas las semanas de ejecución</div>
+      <div class="kpi-meta">Fórmula: SV = EV − PV · SPI = EV / PV</div>
+      <div class="kpi-meta">Frecuencia: <span>Semanal (viernes)</span> · Responsable: <span>Director PM</span></div>
+      <div class="kpi-meta">⚠️ Alerta si SPI &lt; 0.85 por 2 semanas consecutivas</div>
+      <div style="margin-top:0.75rem;padding:0.5rem;background:rgba(0,194,168,0.1);border-radius:6px;font-size:0.75rem;">
+        <strong style="color:var(--teal)">Semana 4:</strong> <span style="color:var(--green)">SPI = 0.93</span> — Diseño de arquitectura con 2 días extra por ajustes BD. Dentro del margen.
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-id">KPI-GP-03</div>
+      <div class="kpi-name">Variación del Costo (CV / CPI)</div>
+      <div class="kpi-cat">Gestión</div>
+      <div class="kpi-meta">Meta: <span>CPI ≥ 0.95</span> · Presupuesto total: L 193,793.88</div>
+      <div class="kpi-meta">Fórmula: CV = EV − AC · CPI = EV / AC</div>
+      <div class="kpi-meta">Frecuencia: <span>Quincenal</span> · Reserva contingencia: <span>L 17,617.62 (10%)</span></div>
+      <div style="margin-top:0.75rem;padding:0.5rem;background:rgba(62,207,142,0.1);border-radius:6px;font-size:0.75rem;">
+        <strong style="color:var(--green)">Semana 4:</strong> CPI = 1.02 — Gasto 2% por debajo de lo planificado. Licencia Figma negociada a menor precio.
+      </div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-id">KPI-GP-04</div>
+      <div class="kpi-name">Densidad de Defectos por Módulo (DDM)</div>
+      <div class="kpi-cat">Gestión</div>
+      <div class="kpi-meta">Meta: <span>DDM ≤ 2.0 defectos/KLOC</span> · Cobertura pruebas ≥ 80%</div>
+      <div class="kpi-meta">Fórmula: DDM = Defectos QA / KLOC por módulo</div>
+      <div class="kpi-meta">Frecuencia: <span>Por sprint / por módulo</span> · Responsable: <span>QA / Dev Senior</span></div>
+      <div class="kpi-meta">⚠️ Alerta si DDM &gt; 5.0 o cobertura &lt; 65%</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-id">KPI-GP-05</div>
+      <div class="kpi-name">% de Requisitos Implementados y Aceptados (PRIA)</div>
+      <div class="kpi-cat">Gestión</div>
+      <div class="kpi-meta">Meta: <span>100%</span> de los 10 RF y 8 RNF del SRS aceptados en UAT</div>
+      <div class="kpi-meta">Fórmula: PRIA = (Requisitos aceptados UAT / Total SRS v1.0) × 100%</div>
+      <div class="kpi-meta">Frecuencia: <span>Al finalizar cada fase + UAT (Semanas 10–11)</span></div>
+      <div style="margin-top:0.75rem;padding:0.5rem;background:rgba(0,194,168,0.08);border-radius:6px;font-size:0.75rem;">
+        <strong style="color:var(--teal)">Semana 4:</strong> SRS aprobado. Pendiente validación cliente en UAT (Semana 10–11).
+      </div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--white);font-size:0.9rem;margin-bottom:1rem;font-weight:600;text-transform:uppercase;letter-spacing:0.08em;">KPIs de Impacto en el Negocio del Cliente</h3>
+  <div class="grid-2">
+    <div class="kpi-card" style="border-color:rgba(240,192,64,0.3)">
+      <div class="kpi-id">KPI-NB-01</div>
+      <div class="kpi-name">Reducción de la Tasa de No-Show (TNS)</div>
+      <div class="kpi-cat">Negocio</div>
+      <div class="kpi-meta">Línea base: <span>30% inasistencia (actual)</span></div>
+      <div class="kpi-meta">Meta: <span>≤ 12% en los primeros 60 días post-implementación</span></div>
+      <div class="kpi-meta">Frecuencia: <span>Mensual</span> · Responsable: <span>Administrador Clínica</span></div>
+      <div class="kpi-meta">⚠️ Alerta si TNS &gt; 20% al mes 2</div>
+    </div>
+    <div class="kpi-card" style="border-color:rgba(240,192,64,0.3)">
+      <div class="kpi-id">KPI-NB-02</div>
+      <div class="kpi-name">Tiempo de Procesamiento/Cita (TPC)</div>
+      <div class="kpi-cat">Negocio</div>
+      <div class="kpi-meta">Línea base: <span>3 min/cita (proceso manual)</span></div>
+      <div class="kpi-meta">Meta: <span>≤ 0.5 min/cita con el sistema automatizado</span></div>
+      <div class="kpi-meta">Frecuencia: <span>Mensual (cronometraje en visita)</span></div>
+    </div>
+    <div class="kpi-card" style="border-color:rgba(240,192,64,0.3)">
+      <div class="kpi-id">KPI-NB-03</div>
+      <div class="kpi-name">Tasa de Adopción del Sistema (TAS)</div>
+      <div class="kpi-cat">Negocio</div>
+      <div class="kpi-meta">Meta: <span>≥ 90%</span> de usuarios activos en Semana 4 post-lanzamiento</div>
+      <div class="kpi-meta">Progresivo: 50% (S1) → 75% (S2) → 90% (S4)</div>
+      <div class="kpi-meta">Frecuencia: <span>Semanal</span> · desde módulo de auditoría</div>
+    </div>
+    <div class="kpi-card" style="border-color:rgba(240,192,64,0.3)">
+      <div class="kpi-id">KPI-NB-04</div>
+      <div class="kpi-name">Período de Recuperación de la Inversión (PRI)</div>
+      <div class="kpi-cat">Negocio</div>
+      <div class="kpi-meta">Meta: <span>PRI ≤ 8 meses</span> desde go-live en producción</div>
+      <div class="kpi-meta">Proyectado: <span>6.9 meses</span> según análisis ROI</div>
+      <div class="kpi-meta">Frecuencia: <span>Trimestral</span> · a los 3 y 6 meses post-impl.</div>
+    </div>
+    <div class="kpi-card" style="border-color:rgba(240,192,64,0.3)">
+      <div class="kpi-id">KPI-NB-05</div>
+      <div class="kpi-name">Índice de Satisfacción del Usuario Final (ISUF)</div>
+      <div class="kpi-cat">Negocio</div>
+      <div class="kpi-meta">Meta: <span>ISUF ≥ 4.0/5.0</span> en encuesta post-capacitación</div>
+      <div class="kpi-meta">Modelo: SERVQUAL adaptado a sistemas de información</div>
+      <div class="kpi-meta">⚠️ Alerta si ISUF &lt; 3.5 → segunda ronda de capacitación</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="calidad">
+  <div class="section-label">Plan de Calidad y Control de Versiones</div>
+  <h2 class="sec-title">Aseguramiento y Control de Calidad</h2>
+  <p class="sec-desc">Basado en modelo ISO/IEC 25010. Calidad no es una revisión final, sino un hábito desde el primer día del proyecto.</p>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title">🎯 Objetivos de Calidad</div>
+      <ul class="deliverable-list">
+        <li><strong>Seguridad de datos clínicos:</strong> Expedientes cifrados AES-256, acceso restringido por roles (RBAC).</li>
+        <li><strong>Velocidad y disponibilidad:</strong> Respuesta &lt; 2 segundos. Uptime 99.5% en horario de atención.</li>
+        <li><strong>Reducción de no-shows:</strong> De 25–35% actual a ≤ 12% en los primeros dos meses de uso.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🔧 Herramientas de QA Utilizadas</div>
+      <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.5rem;">
+        <span class="q-tag">Jest (Backend)</span>
+        <span class="q-tag">Testing Library (Frontend)</span>
+        <span class="q-tag">Cypress (E2E)</span>
+        <span class="q-tag">OWASP ZAP (Seguridad)</span>
+        <span class="q-tag">SonarCloud (Análisis Código)</span>
+        <span class="q-tag">JMeter (Carga)</span>
+        <span class="q-tag">Postman (API)</span>
+        <span class="q-tag">GitHub Actions (CI/CD)</span>
+        <span class="q-tag">AWS CloudWatch (Monitoreo)</span>
+      </div>
+      <div style="margin-top:0.75rem;font-size:0.78rem;color:var(--teal)">
+        ✓ Todas las herramientas QA son Open Source — Costo L 0.00 en Fase 4
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2" style="margin-bottom:2rem;">
+    <div class="card">
+      <div class="card-title">🛡️ Aseguramiento de Calidad (Preventivo)</div>
+      <ul class="deliverable-list">
+        <li>Revisión de código entre pares antes de cada merge a rama principal</li>
+        <li>Análisis estático automático con SonarCloud en pipeline GitHub Actions</li>
+        <li>Reuniones semanales los viernes para revisar avance y desviaciones</li>
+        <li>Checklist de diseño aprobado antes de iniciar cualquier módulo</li>
+        <li>Documentación de endpoints en Swagger durante el desarrollo</li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">✅ Control de Calidad (Detectivo — Fase 4)</div>
+      <ul class="deliverable-list">
+        <li>Pruebas unitarias Jest/Testing Library — cobertura mínima <strong>80%</strong> en módulos críticos</li>
+        <li>Pruebas E2E Cypress: agendar cita → recordatorio WhatsApp → confirmación → registro</li>
+        <li>Pruebas de seguridad OWASP ZAP sobre todos los endpoints REST</li>
+        <li>2 sesiones UAT con personal real de la clínica (Semanas 10 y 11)</li>
+        <li>Encuesta de satisfacción post-capacitación — meta <strong>4.0/5.0</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">📋 Criterios de Aceptación por Módulo (ISO/IEC 25010)</div>
+    <div class="table-wrap" style="margin-top:0.75rem;">
+      <table>
+        <thead><tr><th>Requisito</th><th>Criterio de Aceptación</th><th>Herramienta de Verificación</th></tr></thead>
+        <tbody>
+          <tr><td>Cifrado de datos</td><td>TLS 1.3 en comunicaciones + AES-256 en BD</td><td>OWASP ZAP + revisión AWS RDS</td></tr>
+          <tr><td>Control de acceso RBAC</td><td>Cada perfil solo accede a lo suyo; acceso indebido devuelve 403</td><td>Pruebas de penetración básica</td></tr>
+          <tr><td>Tiempo de respuesta</td><td>&lt; 2 seg con 500 usuarios concurrentes</td><td>JMeter en carga pico</td></tr>
+          <tr><td>Recordatorios WhatsApp</td><td>100% de mensajes enviados a tiempo, sin duplicados</td><td>15 casos en staging con API de Meta</td></tr>
+          <tr><td>Expediente clínico</td><td>Médico crea/edita/consulta en &lt; 3 clics</td><td>UAT con médico real</td></tr>
+          <tr><td>Confirmación desde WhatsApp</td><td>Confirmar/cancelar sin registrarse</td><td>Cypress end-to-end hasta BD</td></tr>
+          <tr><td>Reportes exportables</td><td>PDF o Excel en &lt; 5 segundos</td><td>Prueba funcional con 30 días de datos</td></tr>
+          <tr><td>Disponibilidad</td><td>99.5% de uptime en primer mes</td><td>AWS CloudWatch con alertas</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:1.25rem;">
+    <div class="card-title">🔄 Control de Versiones y Gestión de Cambios</div>
+    <div style="display:flex;flex-wrap:wrap;gap:0.5rem;margin-top:0.75rem;align-items:center;font-size:0.8rem;color:var(--muted);">
+      <span style="background:rgba(0,194,168,0.1);border:1px solid var(--border);padding:0.35rem 0.75rem;border-radius:6px;color:var(--teal)">Propuesto</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="background:rgba(240,192,64,0.1);border:1px solid rgba(240,192,64,0.2);padding:0.35rem 0.75rem;border-radius:6px;color:var(--gold)">Analizado</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="background:rgba(96,165,250,0.1);border:1px solid rgba(96,165,250,0.2);padding:0.35rem 0.75rem;border-radius:6px;color:#60a5fa">Aprobado</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.2);padding:0.35rem 0.75rem;border-radius:6px;color:#a78bfa">Implementado</span>
+      <span style="color:var(--muted)">→</span>
+      <span style="background:rgba(62,207,142,0.1);border:1px solid rgba(62,207,142,0.2);padding:0.35rem 0.75rem;border-radius:6px;color:var(--green)">Verificado</span>
+    </div>
+    <p style="color:var(--muted);font-size:0.82rem;margin-top:0.75rem;">
+      <strong style="color:var(--white)">Regla del equipo:</strong> Si un cambio no tiene estado en el registro, no existe. Ningún cambio entra al código sin estar documentado. 
+      GitHub provee el historial del código y el registro del SRS cubre las decisiones sobre requisitos — formando una cadena documental defendible ante cualquier auditoría.
+    </p>
+  </div>
+
+  <div class="card" style="margin-top:1.25rem;">
+    <div class="card-title">👥 Roles y Responsabilidades de Calidad</div>
+    <div class="table-wrap" style="margin-top:0.75rem;">
+      <table>
+        <thead><tr><th>Integrante</th><th>Rol</th><th>Responsabilidad de Calidad</th></tr></thead>
+        <tbody>
+          <tr><td>Jorge Omar Serrano</td><td><strong>Director de Proyecto / PM</strong></td><td>Aprueba el plan, monitorea KPIs y gestiona decisiones de escalamiento.</td></tr>
+          <tr><td>Diana Edith Brizuela</td><td><strong>Analista QA / Tester</strong></td><td>Diseña y ejecuta casos de prueba, coordina UAT y reporta defectos con evidencia.</td></tr>
+          <tr><td>Kenneth Alexander Espinoza</td><td><strong>Desarrollador Backend</strong></td><td>Cobertura ≥ 80% en APIs, revisiones OWASP y revisión de código frontend.</td></tr>
+          <tr><td>Adrián David Funez</td><td><strong>Desarrollador Frontend</strong></td><td>Pruebas cross-browser, validación de accesibilidad y revisión de código backend.</td></tr>
+          <tr><td>Edvin Josué Hernández</td><td><strong>DevOps / Infraestructura</strong></td><td>Pipeline CI/CD con SonarCloud, backups en AWS S3 y monitoreo de disponibilidad.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-label">Informe de Seguimiento</div>
+  <h2 class="sec-title">Estado del Proyecto — Semana 4</h2>
+  <p class="sec-desc">Corte de evaluación al 5 de abril de 2026. Proyecto en fase de transición hacia Desarrollo.</p>
+  <div class="grid-2">
+    <div class="card" style="border-color:var(--green)">
+      <div class="card-title" style="color:var(--green)">✅ Logros al Corte Semana 4</div>
+      <ul class="deliverable-list">
+        <li>Acta de Constitución <strong>firmada y aprobada</strong></li>
+        <li>Plan de Gestión de Alcance, Cronograma y Riesgos <strong>completados</strong></li>
+        <li>Entrevistas con personal clínico <strong>ejecutadas</strong> — 3 médicos y 2 recepcionistas</li>
+        <li>Documento SRS v1.0 <strong>aprobado formalmente</strong></li>
+        <li>Diseño de arquitectura de software <strong>validado</strong> (con 2 días extra de ajuste en modelo BD)</li>
+        <li>Prototipo Figma <strong>en revisión con stakeholders</strong></li>
+        <li>CPI = 1.02 — <strong>2% por debajo del presupuesto planificado</strong></li>
+        <li>SPI = 0.93 — <strong>dentro del margen establecido (≥ 0.90)</strong></li>
+      </ul>
+    </div>
+    <div class="card">
+      <div class="card-title">🔭 Recomendaciones Semanas 5–8</div>
+      <ul class="deliverable-list">
+        <li>Iniciar módulo de autenticación y RBAC en Semana 5 con un día de margen por el retraso del diseño.</li>
+        <li>Establecer línea base de DDM en el primer sprint para hacer seguimiento desde el inicio del desarrollo.</li>
+        <li>Sesión intermedia con el cliente en Semana 7 para mostrar avance del calendario y módulo de citas.</li>
+        <li>Suscribirse a notas de versión de Meta for Developers como acción preventiva para RT-01.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-label">Cuestionario de Calidad</div>
+  <h2 class="sec-title">Reflexión y Análisis del Equipo</h2>
+  <p class="sec-desc">Respuestas fundamentadas del equipo a preguntas clave sobre gestión de calidad y control de configuración en sistemas de salud.</p>
+  <div style="display:flex;flex-direction:column;gap:1.5rem;">
+    <div class="card">
+      <div class="card-title">Pregunta 1: ¿Por qué es vital el control de configuración en software de salud?</div>
+      <div class="card-body" style="margin-top:0.5rem;">
+        En salud, la precisión no es opcional. Un cambio que parece menor puede tener consecuencias reales: si un desarrollador ajusta el texto del recordatorio de WhatsApp sin avisar y rompe el enlace de confirmación, al día siguiente la recepcionista se encuentra con veinte citas sin confirmar. Un parche no probado en los roles puede dejar que una recepcionista acceda a historiales que no le corresponden. Además, en cualquier auditoría o situación legal, el sistema debe poder demostrar quién cambió qué y cuándo. GitHub provee el historial del código, y el registro de cambios en el SRS cubre las decisiones sobre requisitos, formando juntos una cadena documental defendible.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pregunta 2: Diferencia entre Aseguramiento y Control de Calidad en este proyecto</div>
+      <div class="card-body" style="margin-top:0.5rem;">
+        El <strong style="color:var(--teal)">aseguramiento</strong> trabaja sobre el proceso, antes de construir, para prevenir problemas. El <strong style="color:var(--gold)">control</strong> trabaja sobre el producto ya construido, para detectar lo que falló. En nuestro proyecto aseguramos calidad cuando definimos que ningún pull request entra sin revisión, cuando configuramos SonarCloud en el pipeline y cuando exigimos que el SRS esté aprobado antes de codificar. Todo eso ocurre antes de que exista una sola línea funcional. El control ocurre en semanas 9–11: Diana ejecuta Cypress, corre OWASP ZAP y coordina las sesiones UAT. Ahí ya no se previene, se mide y se documenta.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Pregunta 3: Consecuencias de cambios no controlados (Scope Creep)</div>
+      <div class="card-body" style="margin-top:0.5rem;">
+        El riesgo RP-02 (Scope Creep, nivel ALTO) describe exactamente esto. El escenario típico: el cliente ve el prototipo en Semana 6 y pide que el sistema maneje también el inventario de medicamentos. Si ese cambio entra sin aprobación, un desarrollador trabaja en algo no presupuestado, el módulo de expedientes se retrasa, y en Semana 10 no hay tiempo para hacer UAT con profundidad. Además, el SRS deja de reflejar lo que está en el código: la documentación y el sistema se desalinean. La solución no es rechazar todo: es <strong style="color:var(--teal)">canalizar</strong>. Cualquier solicitud nueva pasa por el registro de cambios, se analiza el impacto y se decide si entra, se posterga para v2.0, o se rechaza con argumento documentado.
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section id="conclusiones">
+  <div class="section-label">Conclusiones</div>
+  <h2 class="sec-title">Cierre y Lecciones del Proyecto</h2>
+  <p class="sec-desc">Reflexiones finales del Grupo 7 sobre la planificación del Software de Automatización de Citas Médicas.</p>
+  <div style="display:flex;flex-direction:column;gap:1.5rem;">
+    <div class="conclusion-card">
+      <p style="font-size:1rem;color:var(--white);margin-bottom:0.75rem;font-weight:600;">Conclusión 1 — Viabilidad Técnica y Cultura de Calidad</p>
+      <p>
+        La planificación del Software de Automatización de Citas Médicas demuestra que es técnicamente viable desarrollar una solución robusta en 12 semanas, siempre que el equipo mantenga las dependencias entre fases bajo control y cumpla con los hitos del cronograma. Al desarrollar este plan entendimos que la calidad no es una revisión final, sino un hábito presente desde el primer día: desde la redacción de requisitos, la revisión constante del código entre compañeros y la definición de criterios de aceptación claros. En un sistema que maneja expedientes médicos y citas por WhatsApp, un error no es solo un fallo técnico, sino un riesgo real para la atención de un paciente.
+      </p>
+    </div>
+    <div class="conclusion-card">
+      <p style="font-size:1rem;color:var(--white);margin-bottom:0.75rem;font-weight:600;">Conclusión 2 — Sostenibilidad Financiera y Control de Configuración</p>
+      <p>
+        Desde el punto de vista financiero, el proyecto presenta una justificación sólida con un VPN positivo de L 332,177 y una TIR del 393% que supera ampliamente la tasa de descuento del 10% anual, con un período de recuperación estimado en menos de 7 meses. Sin embargo, esa sostenibilidad a largo plazo depende de un buen control de configuración: no basta con que el software funcione hoy, debe ser mantenible cuando Meta actualice su API o cuando las clínicas requieran nuevas funciones. En el contexto de Honduras, donde la digitalización de la salud está creciendo, gestionar correctamente cada cambio es lo que convierte la tecnología en una solución real para el sector médico, y no en un problema de gestión adicional.
+      </p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<section>
+  <div class="section-label">Referencias Bibliográficas</div>
+  <h2 class="sec-title">Fuentes Consultadas</h2>
+  <div class="card">
+    <div class="card-body" style="columns:2;column-gap:2rem;font-size:0.8rem;line-height:1.8;">
+      <p>PMI. (2017). <em>Guía PMBOK (6.ª ed.)</em>. ISBN: 978-1-62825-194-4</p>
+      <p>Piattini et al. (2018). <em>Calidad de Sistemas de Información (4.ª ed.)</em>. RA-MA Editorial.</p>
+      <p>Baca Urbina, G. (2013). <em>Evaluación de proyectos (7ª ed.)</em>. McGraw-Hill Education.</p>
+      <p>ISO/IEC 25010:2011. <em>Software Quality Requirements and Evaluation (SQuaRE)</em>.</p>
+      <p>OWASP Foundation. (2021). <em>OWASP Top 10:2021</em>. owasp.org/Top10</p>
+      <p>Meta Platforms. (2025). <em>WhatsApp Business Platform — Cloud API</em>. developers.facebook.com</p>
+      <p>Amazon Web Services. (2026). <em>AWS Pricing Calculator</em>. calculator.aws</p>
+      <p>INE Honduras. (2024). <em>Indicadores de actividad hospitalaria 2018–2024</em>. ine.gob.hn</p>
+      <p>OPS/OMS. (2024). <em>Hoja de ruta de transformación digital de la salud</em>. paho.org</p>
+      <p>BCH. (2026). <em>Tipo de cambio de referencia HNL/USD</em>. bch.hn</p>
+      <p>Atlassian. (2026). <em>Jira Software &amp; Confluence</em>. atlassian.com</p>
+      <p>Figma Inc. (2026). <em>Figma Professional</em>. figma.com</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p style="font-size:1rem;font-family:'DM Serif Display',serif;color:var(--white);margin-bottom:0.5rem;">
+    Software de Automatización de Citas Médicas
+  </p>
+  <p>
+    <strong>Grupo 7</strong> · Formulación y Desarrollo de Proyectos de Tecnología I ·
+    <strong>UCENM 2026</strong>
+  </p>
+</footer>
+
+<script>
+window.addEventListener('load', () => {
+  const bars = document.querySelectorAll('.bar-fill');
+  bars.forEach(b => {
+    const w = b.style.width;
+    b.style.width = '0';
+    setTimeout(() => { b.style.width = w; }, 300);
+  });
+});
+</script>
+</body>
+</html>
